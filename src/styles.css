@@ -1,0 +1,135 @@
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import 'tailwindcss';
+
+:root {
+	color-scheme: light;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-family: 'Inter', sans-serif;
+	background-color: #ffffff;
+	color: #18181b;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body,
+app-root {
+	min-height: 100dvh;
+}
+
+app-root {
+	display: block;
+}
+
+.bg-grid {
+	background-size: 32px 32px;
+	background-image:
+		linear-gradient(to right, rgb(0 0 0 / 3%) 1px, transparent 1px),
+		linear-gradient(to bottom, rgb(0 0 0 / 3%) 1px, transparent 1px);
+}
+
+.tab-content {
+	animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #e4e4e7;
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #a1a1aa;
+}
+
+.nav-link {
+	position: relative;
+	color: #71717a;
+	transition: color 0.2s;
+}
+
+.nav-link:hover {
+	color: #18181b;
+}
+
+.nav-link.active-tab {
+	color: #18181b;
+	font-weight: 500;
+}
+
+.nav-link.active-tab::after {
+	content: '';
+	position: absolute;
+	bottom: -4px;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background-color: #18181b;
+}
+
+.mobile-nav-btn {
+	color: #a1a1aa;
+}
+
+.mobile-nav-btn.active-tab {
+	color: #18181b;
+}
+
+.link-hover {
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: border-color 0.2s;
+}
+
+.link-hover:hover {
+	border-bottom-color: #18181b;
+}
+
+a:focus-visible {
+	outline: 2px solid #18181b;
+	outline-offset: 4px;
+	border-radius: 0.25rem;
+}
+
+.pb-safe {
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.tab-content {
+		animation: none;
+	}
+}

@@ -1,0 +1,74 @@
+<div class="max-w-4xl mt-4 md:mt-12 tab-content">
+	<h2 class="text-2xl font-medium tracking-tight mb-8 flex items-center gap-3">
+		<svg class="w-6 h-6 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+		</svg>
+		{{ experience().featured.sectionTitle }}
+	</h2>
+
+	<div class="mb-16 bg-white border border-zinc-200 shadow-sm p-6 md:p-10 rounded-lg relative overflow-hidden group">
+		<svg class="absolute -bottom-4 -right-4 w-48 h-48 text-zinc-50 opacity-80 -z-10 transition-transform group-hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 12l6-6 4 4 8-8"></path>
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 22h18"></path>
+		</svg>
+
+		<h3 class="text-xl font-medium text-zinc-900 mb-2">{{ experience().featured.title }}</h3>
+		<p class="text-zinc-500 text-sm mb-6 font-mono bg-zinc-50 w-fit px-2 py-1 rounded">{{ experience().featured.stack }}</p>
+
+		<div class="space-y-4 text-zinc-600 font-light text-sm md:text-base leading-relaxed mb-8">
+			@for (detail of experience().featured.details; track detail.label) {
+				<p>
+					<strong class="font-medium text-zinc-900">{{ detail.label }}:</strong>
+					{{ detail.description }}
+				</p>
+			}
+		</div>
+
+		<h4 class="font-medium text-zinc-900 mb-4 text-sm uppercase tracking-wide border-t border-zinc-100 pt-6">
+			{{ experience().featured.metricsTitle }}
+		</h4>
+		<ul class="space-y-3 text-zinc-700 font-light text-sm">
+			@for (metric of experience().featured.metrics; track metric.label) {
+				<li class="flex items-start gap-3">
+					<span class="text-zinc-300 mt-0.5">→</span>
+					<span><strong>{{ metric.label }}:</strong> {{ metric.description }}</span>
+				</li>
+			}
+		</ul>
+	</div>
+
+	<h2 class="text-2xl font-medium tracking-tight mb-10 flex items-center gap-3">
+		<svg class="w-6 h-6 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+		</svg>
+		{{ experience().historyTitle }}
+	</h2>
+
+	<div class="space-y-12">
+		@for (entry of experience().entries; track entry.period + entry.company) {
+			<div>
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-6 group">
+					<div class="text-sm text-zinc-400 font-light pt-1">{{ entry.period }}</div>
+					<div class="md:col-span-3">
+						<h3 class="text-lg font-medium text-zinc-900">{{ entry.role }}</h3>
+						<p class="text-zinc-500 text-sm mb-4">{{ entry.company }}</p>
+						<ul class="space-y-2 text-zinc-600 font-light text-sm mb-6">
+							@for (highlight of entry.highlights; track highlight) {
+								<li class="flex gap-2"><span class="text-zinc-300">-</span> {{ highlight }}</li>
+							}
+						</ul>
+						<div class="flex flex-wrap gap-2 text-xs text-zinc-500">
+							@for (tag of entry.tags; track tag) {
+								<span class="px-2 py-1 bg-white border border-zinc-200 rounded-sm">{{ tag }}</span>
+							}
+						</div>
+					</div>
+				</div>
+
+				@if (!$last) {
+					<hr class="border-zinc-100 mt-12" />
+				}
+			</div>
+		}
+	</div>
+</div>

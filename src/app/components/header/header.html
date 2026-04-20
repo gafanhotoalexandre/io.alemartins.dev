@@ -1,0 +1,34 @@
+<header class="w-full max-w-5xl mx-auto px-6 py-8 md:py-12 flex justify-between items-center z-40 bg-transparent">
+	<button
+		type="button"
+		class="text-lg font-medium tracking-tight text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 flex items-center gap-2 group rounded-sm"
+		(click)="tabSelected.emit('home')"
+	>
+		<div
+			class="w-6 h-6 rounded-sm bg-zinc-900 text-white flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-105 pr-px"
+		>
+			{{ brand().initials }}
+		</div>
+		{{ brand().displayName }}.
+	</button>
+
+	<nav class="hidden md:flex gap-8 text-sm" role="tablist" aria-label="Seções do portfólio">
+		@for (tab of tabs(); track tab.id) {
+			<button
+				type="button"
+				role="tab"
+				class="nav-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 rounded-sm"
+				[class.active-tab]="currentTab() === tab.id"
+				[id]="'desktop-tab-' + tab.id"
+				[attr.aria-controls]="tab.sectionId"
+				[attr.aria-label]="tab.ariaLabel"
+				[attr.aria-selected]="currentTab() === tab.id"
+				[tabIndex]="currentTab() === tab.id ? 0 : -1"
+				(click)="tabSelected.emit(tab.id)"
+				(keydown)="onKeydown($event, tab.id)"
+			>
+				{{ tab.label }}
+			</button>
+		}
+	</nav>
+</header>

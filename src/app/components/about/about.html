@@ -1,0 +1,77 @@
+<div class="tab-content">
+	<div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mt-4 md:mt-12 relative">
+		<svg
+			class="absolute -top-12 -left-12 w-64 h-64 text-zinc-100 -z-10 hidden md:block"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="0.5"
+			aria-hidden="true"
+		>
+			<circle cx="12" cy="12" r="10"></circle>
+			<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+			<path d="M2 12h20"></path>
+		</svg>
+
+		<div class="md:col-span-8 flex flex-col justify-center">
+			<p class="text-zinc-500 text-sm mb-4 font-medium tracking-wide uppercase">{{ about().eyebrow }}</p>
+			<h1 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1] text-zinc-900 mb-8">
+				{{ about().headline }}
+			</h1>
+
+			<div class="space-y-6 text-base md:text-lg text-zinc-600 font-light leading-relaxed max-w-2xl">
+				@for (paragraph of about().introParagraphs; track paragraph) {
+					<p>{{ paragraph }}</p>
+				}
+
+				<p>
+					{{ about().currentCompany.prefix }}
+					<span class="text-zinc-900 font-medium border-b border-zinc-200 pb-0.5">{{
+						about().currentCompany.companyName
+					}}</span>
+					{{ about().currentCompany.suffix }}
+				</p>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-6 mt-10 text-sm font-medium">
+				@for (action of about().actions; track action.targetTab) {
+					@switch (action.kind) {
+						@case ('primary') {
+							<button
+								type="button"
+								class="px-6 py-3 bg-zinc-900 text-white rounded hover:bg-zinc-800 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4"
+								(click)="tabSelected.emit(action.targetTab)"
+							>
+								{{ action.label }}
+							</button>
+						}
+						@case ('link') {
+							<button
+								type="button"
+								class="link-hover text-zinc-600 hover:text-zinc-900 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 rounded-sm"
+								(click)="tabSelected.emit(action.targetTab)"
+							>
+								{{ action.label }}
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+								</svg>
+							</button>
+						}
+					}
+				}
+			</div>
+		</div>
+
+		<div class="md:col-span-4 flex justify-start md:justify-end items-start order-first md:order-last relative">
+			<div class="absolute w-32 h-32 md:w-48 md:h-48 border border-zinc-200 rounded-full top-2 right-2 left-2 md:right-0 md:translate-x-4 md:translate-y-4 -z-10"></div>
+			<img
+				[ngSrc]="brand().avatarUrl"
+				[alt]="brand().avatarAlt"
+				width="192"
+				height="192"
+				priority
+				class="w-32 h-32 md:w-48 md:h-48 rounded-full grayscale opacity-95 object-cover shadow-sm border border-zinc-100 bg-white"
+			/>
+		</div>
+	</div>
+</div>

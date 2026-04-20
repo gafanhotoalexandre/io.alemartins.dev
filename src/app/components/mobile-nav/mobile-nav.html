@@ -1,0 +1,51 @@
+<nav
+	class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-zinc-100 z-50 pb-safe"
+	role="tablist"
+	aria-label="Seções do portfólio em dispositivos móveis"
+>
+	<div class="flex justify-around items-center h-16 px-2">
+		@for (tab of tabs(); track tab.id) {
+			<button
+				type="button"
+				role="tab"
+				class="mobile-nav-btn flex flex-col items-center justify-center w-full h-full gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 rounded-sm"
+				[class.active-tab]="currentTab() === tab.id"
+				[id]="'mobile-tab-' + tab.id"
+				[attr.aria-controls]="tab.sectionId"
+				[attr.aria-label]="tab.ariaLabel"
+				[attr.aria-selected]="currentTab() === tab.id"
+				[tabIndex]="currentTab() === tab.id ? 0 : -1"
+				(click)="tabSelected.emit(tab.id)"
+				(keydown)="onKeydown($event, tab.id)"
+			>
+				@switch (tab.id) {
+					@case ('home') {
+						<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+							<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+							<polyline points="9 22 9 12 15 12 15 22" />
+						</svg>
+					}
+					@case ('experience') {
+						<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+							<rect x="2" y="7" width="20" height="14" rx="2" />
+							<path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+						</svg>
+					}
+					@case ('stack') {
+						<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+							<polygon points="12 2 2 7 12 12 22 7 12 2" />
+							<polyline points="2 17 12 22 22 17" />
+							<polyline points="2 12 12 17 22 12" />
+						</svg>
+					}
+					@case ('contact') {
+						<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+							<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+						</svg>
+					}
+				}
+				<span class="text-[10px] tracking-wide">{{ tab.mobileLabel }}</span>
+			</button>
+		}
+	</div>
+</nav>
