@@ -43,10 +43,10 @@ import { SeoService } from '../services/seo';
 							<p class="text-lg text-zinc-500 font-light leading-relaxed">{{ post.description }}</p>
 						</div>
 
-						<div class="shrink-0 bg-zinc-50 border border-zinc-200 px-4 py-3 rounded-xl shadow-sm flex items-center gap-4 self-start md:self-auto">
-							<div class="flex flex-col text-right">
+						<div class="shrink-0 bg-zinc-50 border border-zinc-200 px-4 py-3 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 self-start md:self-auto">
+							<div class="flex flex-col text-left sm:text-right" id="objective-mode-title">
 								<span class="text-sm font-semibold tracking-tight text-zinc-900">Modo Objetivo</span>
-								<span class="text-[10px] text-zinc-500 font-mono mt-0.5 uppercase tracking-wider">
+								<span id="objective-mode-description" class="text-[10px] text-zinc-500 font-mono mt-0.5 uppercase tracking-wider">
 									Leitura: ~{{ post.readingTime }} min
 								</span>
 							</div>
@@ -54,37 +54,45 @@ import { SeoService } from '../services/seo';
 								type="button"
 								role="switch"
 								[attr.aria-checked]="objectiveMode()"
+								aria-labelledby="objective-mode-title"
+								aria-describedby="objective-mode-description objective-mode-status"
 								(click)="toggleObjectiveMode()"
-								class="relative inline-flex h-7 w-12 items-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 cursor-pointer"
+								class="relative inline-flex h-7 w-12 items-center rounded-full border transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 cursor-pointer"
 								[class.bg-zinc-900]="objectiveMode()"
 								[class.border-zinc-900]="objectiveMode()"
 								[class.bg-zinc-300]="!objectiveMode()"
 								[class.border-zinc-300]="!objectiveMode()"
 							>
 								<span
-									class="inline-block h-5 w-5 transform rounded-full bg-white transition-transform"
+									class="inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ease-out"
 									[class.translate-x-6]="objectiveMode()"
 									[class.translate-x-1]="!objectiveMode()"
 								></span>
 							</button>
+							<p id="objective-mode-status" class="sr-only" aria-live="polite" aria-atomic="true">
+								{{ objectiveModeAnnouncement() }}
+							</p>
 						</div>
 					</div>
 
 					<article class="blog-prose max-w-3xl" [class.blog-objective-mode]="objectiveMode()">
-						@for (block of visibleBlocks(); track $index) {
+						@for (block of articleBlocks(); track $index) {
 							<section
 								class="blog-article-block"
 								[class.blog-core-block]="block.kind === 'core'"
 								[class.blog-context-block]="block.kind === 'context'"
+								[attr.aria-hidden]="objectiveMode() && block.kind === 'context' ? 'true' : null"
+								[attr.inert]="objectiveMode() && block.kind === 'context' ? '' : null"
 								[innerHTML]="block.html"
 							></section>
 						}
 					</article>
 
 					<section class="max-w-3xl mt-16 pt-10 border-t border-zinc-200">
-						<h2 class="text-xl font-medium tracking-tight text-zinc-900 mb-3">Próxima etapa</h2>
+						<h2 class="text-xl font-medium tracking-tight text-zinc-900 mb-3">Em breve</h2>
 						<p class="text-sm md:text-base text-zinc-500 font-light leading-relaxed">
-							O espaço de comentários fica reservado para uma integração futura com Giscus, sem travar o V1 do blog.
+							O espaço de comentários fica reservado para uma integração futura com Giscus
+              <!-- , sem travar o V1 do blog. -->
 						</p>
 					</section>
 				} @else {
@@ -112,19 +120,16 @@ import { SeoService } from '../services/seo';
 export class BlogArticlePage {
 	protected readonly objectiveMode = signal(false);
 	protected readonly currentPost = computed(() => getBlogPostBySlug(this.slug()));
+	protected readonly articleBlocks = computed<readonly BlogContentBlock[]>(() => this.currentPost()?.blocks ?? []);
 	protected readonly formattedDate = computed(() => {
 		const post = this.currentPost();
 		return post ? formatBlogDate(post.publishedAt) : '';
 	});
-	protected readonly visibleBlocks = computed<readonly BlogContentBlock[]>(() => {
-		const post = this.currentPost();
-
-		if (!post) {
-			return [];
-		}
-
-		return this.objectiveMode() ? post.blocks.filter((block) => block.kind === 'core') : post.blocks;
-	});
+	protected readonly objectiveModeAnnouncement = computed(() =>
+		this.objectiveMode()
+			? 'Modo Objetivo ativo. Exibindo apenas os blocos essenciais do artigo.'
+			: 'Modo Objetivo desativado. Exibindo o artigo completo.',
+	);
 
 	private readonly route = inject(ActivatedRoute);
 	private readonly seoService = inject(SeoService);

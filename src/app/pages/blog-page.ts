@@ -25,17 +25,30 @@ import { BLOG_DESCRIPTION, BLOG_TITLE, formatBlogDate, getBlogPosts } from '../d
               id="blog-search"
               type="search"
               placeholder="Buscar artigos..."
+              [value]="searchTerm()"
               class="w-full bg-zinc-50 border border-zinc-200 text-sm rounded-md pl-10 pr-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:border-zinc-900 transition-all"
               (input)="updateSearchTerm($event)"
             />
           </div>
         </div>
 
-        <p class="sr-only" aria-live="polite">{{ filteredPosts().length }} artigos visíveis.</p>
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-zinc-500 font-light leading-relaxed" aria-live="polite">{{ resultsSummary() }}</p>
+
+          @if (hasActiveSearch()) {
+            <button
+              type="button"
+              class="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 shadow-sm hover:border-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4"
+              (click)="clearSearch()"
+            >
+              Limpar busca
+            </button>
+          }
+        </div>
 
         <div class="space-y-4">
           @for (post of filteredPosts(); track post.slug) {
-            <article class="group border border-zinc-100 bg-white p-5 rounded-xl hover:border-zinc-300 hover:shadow-sm transition-all">
+            <article class="group border border-zinc-100 bg-white p-5 rounded-xl shadow-[0_12px_30px_-28px_rgba(24,24,27,0.7)] hover:border-zinc-300 hover:shadow-[0_18px_40px_-28px_rgba(24,24,27,0.45)] transition-all">
               <a [routerLink]="['/blog', post.slug]" class="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-4 rounded-lg">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
@@ -90,13 +103,25 @@ export class BlogPage {
       return haystack.includes(term);
     });
   });
+  protected readonly hasActiveSearch = computed(() => this.searchTerm().trim().length > 0);
+  protected readonly resultsSummary = computed(() => {
+    const total = this.filteredPosts().length;
+    const totalLabel = total === 1 ? '1 artigo visível' : `${total} artigos visíveis`;
+    const term = this.searchTerm().trim();
+
+    return term ? `${totalLabel} para "${term}".` : `${totalLabel} no momento.`;
+  });
 
   private readonly posts = getBlogPosts();
-  private readonly searchTerm = signal('');
+  protected readonly searchTerm = signal('');
 
   protected updateSearchTerm(event: Event): void {
     const element = event.target as HTMLInputElement | null;
     this.searchTerm.set(element?.value ?? '');
+  }
+
+  protected clearSearch(): void {
+    this.searchTerm.set('');
   }
 
   protected formatDate(date: string): string {

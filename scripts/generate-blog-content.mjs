@@ -7,6 +7,9 @@ const projectRoot = process.cwd();
 const postsDir = path.join(projectRoot, 'content', 'posts');
 const outputDir = path.join(projectRoot, 'src', 'app', 'data', 'generated');
 const outputFile = path.join(outputDir, 'blog-posts.generated.ts');
+const publicDir = path.join(projectRoot, 'public');
+const sitemapFile = path.join(publicDir, 'sitemap.xml');
+const siteOrigin = 'https://io.alemartins.dev.br';
 
 const markdown = new MarkdownIt({
 	html: false,
@@ -41,20 +44,52 @@ async function main() {
 
 	posts.sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
 
-	await fs.mkdir(outputDir, { recursive: true });
-	await fs.writeFile(
-		outputFile,
-		[
-			"import type { BlogPost } from '../blog';",
-			'',
-			'export const BLOG_POSTS = ',
-			`${JSON.stringify(posts, null, 2)} satisfies readonly BlogPost[];`,
-			'',
-		].join('\n'),
-		'utf8',
-	);
+	await Promise.all([fs.mkdir(outputDir, { recursive: true }), fs.mkdir(publicDir, { recursive: true })]);
+
+	await Promise.all([
+		fs.writeFile(
+			outputFile,
+			[
+				"import type { BlogPost } from '../blog';",
+				'',
+				'export const BLOG_POSTS = ',
+				`${JSON.stringify(posts, null, 2)} satisfies readonly BlogPost[];`,
+				'',
+			].join('\n'),
+			'utf8',
+		),
+		fs.writeFile(sitemapFile, buildSitemap(posts), 'utf8'),
+	]);
 
 	console.log(`Generated ${posts.length} blog post(s) into ${path.relative(projectRoot, outputFile)}`);
+	console.log(`Updated ${path.relative(projectRoot, sitemapFile)}`);
+}
+
+function buildSitemap(posts) {
+	const staticRoutes = ['/', '/experience', '/stack', '/contact'];
+	const latestPublishedAt = posts[0]?.publishedAt;
+	const entries = [
+		...staticRoutes.map((route) => buildSitemapEntry(`${siteOrigin}${route}`)),
+		buildSitemapEntry(`${siteOrigin}/blog`, latestPublishedAt),
+		...posts.map((post) => buildSitemapEntry(`${siteOrigin}/blog/${post.slug}`, post.publishedAt)),
+	];
+
+	return [
+		'<?xml version="1.0" encoding="UTF-8"?>',
+		'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+		...entries,
+		'</urlset>',
+		'',
+	].join('\n');
+}
+
+function buildSitemapEntry(loc, lastmod) {
+	return [
+		'  <url>',
+		`    <loc>${loc}</loc>`,
+		...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
+		'  </url>',
+	].join('\n');
 }
 
 function validateFrontmatter(data, filePath) {

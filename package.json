@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build:blog-content && ng serve",
-    "build": "npm run build:blog-content && ng build",
-    "watch": "npm run build:blog-content && ng build --watch --configuration development",
+    "prestart": "npm run build:blog-content",
+    "start": "ng serve",
+    "prebuild": "npm run build:blog-content",
+    "build": "ng build",
+    "prewatch": "npm run build:blog-content",
+    "watch": "ng build --watch --configuration development",
     "build:blog-content": "node scripts/generate-blog-content.mjs",
+    "pretest": "npm run build:blog-content",
     "test": "ng test",
     "serve:ssr:io.alemartins.dev": "node dist/io.alemartins.dev/server/server.mjs"
   },

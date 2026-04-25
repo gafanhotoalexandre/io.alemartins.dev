@@ -1,6 +1,6 @@
 import type { BlogPost } from '../blog';
 
-export const BLOG_POSTS =
+export const BLOG_POSTS = 
 [
   {
     "title": "Angular 21: Signals substituindo RxJS na prática",

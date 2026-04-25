@@ -130,6 +130,14 @@ a:focus-visible {
 	line-height: 1.75;
 }
 
+.blog-article-block {
+	transition:
+		opacity 0.22s ease,
+		transform 0.22s ease,
+		max-height 0.28s ease,
+		margin 0.22s ease;
+}
+
 .blog-article-block + .blog-article-block {
 	margin-top: 2rem;
 }
@@ -228,10 +236,30 @@ a:focus-visible {
 		margin-left 0.2s ease;
 }
 
+.blog-context-block {
+	max-height: 9999px;
+	opacity: 1;
+	transform: translateY(0);
+	overflow: hidden;
+}
+
 .blog-objective-mode .blog-core-block {
 	border-left: 2px solid #18181b;
 	padding-left: 1rem;
 	margin-left: -1rem;
+}
+
+.blog-objective-mode .blog-context-block {
+	max-height: 0;
+	opacity: 0;
+	transform: translateY(-0.5rem);
+	margin-top: 0 !important;
+	margin-bottom: 0;
+	pointer-events: none;
+}
+
+.blog-objective-mode .blog-context-block + .blog-article-block {
+	margin-top: 0;
 }
 
 @media (max-width: 767px) {
