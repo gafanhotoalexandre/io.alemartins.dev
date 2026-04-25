@@ -1,0 +1,22 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa de leitura e proteção por IP</title>
+  <desc id="desc">Diagrama simplificado mostrando a otimização de leitura no backend e o bloqueio progressivo por IP nas rotas públicas.</desc>
+  <rect width="1200" height="720" rx="32" fill="#FAFAFA"/>
+  <rect x="88" y="118" width="286" height="162" rx="28" fill="#FFFFFF" stroke="#18181B" stroke-width="2"/>
+  <text x="231" y="186" fill="#18181B" font-size="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700">Consultas críticas</text>
+  <text x="231" y="230" fill="#52525B" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">Leituras frequentes</text>
+  <text x="231" y="260" fill="#52525B" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">N+1 / carregamento redundante</text>
+  <rect x="458" y="118" width="286" height="162" rx="28" fill="#18181B"/>
+  <text x="601" y="186" fill="white" font-size="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700">Intervenção enxuta</text>
+  <text x="601" y="230" fill="#E4E4E7" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">Query shape + AsNoTracking</text>
+  <text x="601" y="260" fill="#E4E4E7" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">Rate limiting por IP</text>
+  <rect x="828" y="118" width="286" height="162" rx="28" fill="#FFFFFF" stroke="#18181B" stroke-width="2"/>
+  <text x="971" y="186" fill="#18181B" font-size="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700">Impacto</text>
+  <text x="971" y="230" fill="#52525B" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">~15% de ganho estimado</text>
+  <text x="971" y="260" fill="#52525B" font-size="20" text-anchor="middle" font-family="Inter, Arial, sans-serif">Mais atrito ao abuso automatizado</text>
+  <path d="M374 199H458" stroke="#18181B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M744 199H828" stroke="#18181B" stroke-width="8" stroke-linecap="round"/>
+  <rect x="176" y="396" width="848" height="170" rx="28" fill="#F4F4F5" stroke="#D4D4D8" stroke-width="2"/>
+  <text x="600" y="460" fill="#18181B" font-size="34" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700">Solução suficiente > arquitetura paralela</text>
+  <text x="600" y="510" fill="#52525B" font-size="24" text-anchor="middle" font-family="Inter, Arial, sans-serif">A intervenção certa melhorou performance, segurança e onboarding sem inaugurar outra camada operacional.</text>
+</svg>

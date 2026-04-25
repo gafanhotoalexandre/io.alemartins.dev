@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "start": "npm run build:blog-content && ng serve",
+    "build": "npm run build:blog-content && ng build",
+    "watch": "npm run build:blog-content && ng build --watch --configuration development",
+    "build:blog-content": "node scripts/generate-blog-content.mjs",
     "test": "ng test",
     "serve:ssr:io.alemartins.dev": "node dist/io.alemartins.dev/server/server.mjs"
   },
@@ -32,7 +33,9 @@
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "gray-matter": "^4.0.3",
     "jsdom": "^28.0.0",
+    "markdown-it": "^14.1.1",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.12",

@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://io.alemartins.dev.br/sitemap.xml

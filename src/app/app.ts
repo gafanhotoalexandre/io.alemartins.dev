@@ -1,121 +1,79 @@
-import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  PLATFORM_ID,
-  afterNextRender,
+  computed,
+  effect,
   inject,
-  signal,
 } from '@angular/core';
-import { AboutComponent } from './components/about/about';
-import { ContactComponent } from './components/contact/contact';
-import { ExperienceComponent } from './components/experience/experience';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
 import { HeaderComponent } from './components/header/header';
+import { BlogHeaderComponent } from './components/blog-header/blog-header';
 import { MobileNavComponent } from './components/mobile-nav/mobile-nav';
-import { StackComponent } from './components/stack/stack';
 import { PORTFOLIO_DATA, PortfolioTabId } from './data/portfolio-data';
+import { ROUTE_SEO, SITE_ORIGIN, type RouteSeo } from './data/site-seo';
+import { SeoService } from './services/seo';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, MobileNavComponent, AboutComponent, ExperienceComponent, StackComponent, ContactComponent],
+  imports: [HeaderComponent, BlogHeaderComponent, MobileNavComponent, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App implements OnDestroy {
+export class App {
   protected readonly data = PORTFOLIO_DATA;
-  protected readonly currentTab = signal<PortfolioTabId>(PORTFOLIO_DATA.site.defaultTab);
-  protected readonly sectionIds = {
-    home: PORTFOLIO_DATA.tabs.find((tab) => tab.id === 'home')!.sectionId,
-    experience: PORTFOLIO_DATA.tabs.find((tab) => tab.id === 'experience')!.sectionId,
-    stack: PORTFOLIO_DATA.tabs.find((tab) => tab.id === 'stack')!.sectionId,
-    contact: PORTFOLIO_DATA.tabs.find((tab) => tab.id === 'contact')!.sectionId,
-  } as const;
+  protected readonly currentTab = computed<PortfolioTabId | null>(() => {
+    const currentUrl = this.currentUrl();
 
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly hashChangeHandler = () => {
-    const nextTab = this.getTabFromHash(window.location.hash);
-
-    if (!nextTab || nextTab === this.currentTab()) {
-      return;
-    }
-
-    this.currentTab.set(nextTab);
-    this.scrollToTop();
-  };
-
-  constructor() {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    afterNextRender(() => {
-      this.applyHashOnBoot();
-      window.addEventListener('hashchange', this.hashChangeHandler);
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    window.removeEventListener('hashchange', this.hashChangeHandler);
-  }
-
-  protected selectTab(tabId: PortfolioTabId): void {
-    if (!this.isValidTabId(tabId)) {
-      return;
-    }
-
-    const changed = this.currentTab() !== tabId;
-
-    if (changed) {
-      this.currentTab.set(tabId);
-      this.scrollToTop();
-      this.syncHash(tabId);
-    }
-  }
-
-  private applyHashOnBoot(): void {
-    const nextTab = this.getTabFromHash(window.location.hash);
-
-    if (!nextTab || nextTab === this.currentTab()) {
-      return;
-    }
-
-    this.currentTab.set(nextTab);
-  }
-
-  private getTabFromHash(hash: string): PortfolioTabId | null {
-    const value = hash.replace(/^#/, '');
-
-    if (!value) {
+    if (currentUrl === '/' || currentUrl === '') {
       return this.data.site.defaultTab;
     }
 
-    return this.isValidTabId(value) ? value : null;
+    const currentRoute = this.data.tabs.find((tab) => tab.path === currentUrl);
+    return currentRoute?.id ?? null;
+  });
+  protected readonly isBlogRoute = computed(() => this.currentUrl().startsWith('/blog'));
+
+  private readonly router = inject(Router);
+  private readonly seoService = inject(SeoService);
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
+    { initialValue: this.router.url },
+  );
+  private readonly routeSeo = computed<RouteSeo>(() => {
+    this.currentUrl();
+
+    const activeRoute = this.getLeafRoute(this.router.routerState.snapshot.root);
+    return (activeRoute.data['seo'] as RouteSeo | undefined) ?? ROUTE_SEO.home;
+  });
+
+  constructor() {
+    effect(() => {
+      const currentUrl = this.currentUrl();
+      const routeSeo = this.routeSeo();
+
+      this.seoService.setPageSeo(routeSeo, this.toCanonicalUrl(currentUrl));
+    });
   }
 
-  private isValidTabId(value: string): value is PortfolioTabId {
-    return this.data.tabs.some((tab) => tab.id === value);
-  }
+  private getLeafRoute(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
+    let currentRoute = route;
 
-  private syncHash(tabId: PortfolioTabId): void {
-    if (!this.isBrowser || window.location.hash === `#${tabId}`) {
-      return;
+    while (currentRoute.firstChild) {
+      currentRoute = currentRoute.firstChild;
     }
 
-    window.location.hash = tabId;
+    return currentRoute;
   }
 
-  private scrollToTop(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  private toCanonicalUrl(path: string): string {
+    const normalizedPath = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
+    return new URL(normalizedPath, SITE_ORIGIN).toString();
   }
 }

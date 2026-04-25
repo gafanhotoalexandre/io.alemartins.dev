@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://io.alemartins.dev.br/</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/experience</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/stack</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/contact</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/blog</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/blog/angular-21-signals-substituindo-rxjs-na-pratica</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+  <url>
+    <loc>https://io.alemartins.dev.br/blog/performance-e-prevencao-de-abuso-em-uma-plataforma-juridica</loc>
+    <lastmod>2026-04-25</lastmod>
+  </url>
+</urlset>

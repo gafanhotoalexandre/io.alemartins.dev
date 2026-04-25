@@ -8,70 +8,17 @@
 <div class="min-h-screen flex flex-col selection:bg-zinc-200 selection:text-zinc-900 relative">
   <div class="fixed inset-0 bg-grid -z-20 pointer-events-none"></div>
 
-  <app-header
-    [brand]="data.brand"
-    [tabs]="data.tabs"
-    [currentTab]="currentTab()"
-    (tabSelected)="selectTab($event)"
-  />
+  @if (isBlogRoute()) {
+    <app-blog-header [brand]="data.brand" />
+  } @else {
+    <app-header [brand]="data.brand" [tabs]="data.tabs" [currentTab]="currentTab()" />
+  }
 
   <main id="main-content" class="w-full max-w-5xl mx-auto px-6 pb-32 md:pb-24 flex-1">
-    <section
-      [id]="sectionIds.home"
-      role="tabpanel"
-      aria-labelledby="desktop-tab-home mobile-tab-home"
-      [attr.aria-hidden]="currentTab() !== 'home'"
-      [hidden]="currentTab() !== 'home'"
-    >
-      @if (currentTab() === 'home') {
-        <app-about
-          [brand]="data.brand"
-          [about]="data.about"
-          (tabSelected)="selectTab($event)"
-        />
-      }
-    </section>
-
-    <section
-      [id]="sectionIds.experience"
-      role="tabpanel"
-      aria-labelledby="desktop-tab-experience mobile-tab-experience"
-      [attr.aria-hidden]="currentTab() !== 'experience'"
-      [hidden]="currentTab() !== 'experience'"
-    >
-      @if (currentTab() === 'experience') {
-        <app-experience [experience]="data.experience" />
-      }
-    </section>
-
-    <section
-      [id]="sectionIds.stack"
-      role="tabpanel"
-      aria-labelledby="desktop-tab-stack mobile-tab-stack"
-      [attr.aria-hidden]="currentTab() !== 'stack'"
-      [hidden]="currentTab() !== 'stack'"
-    >
-      @if (currentTab() === 'stack') {
-        <app-stack [stack]="data.stack" />
-      }
-    </section>
-
-    <section
-      [id]="sectionIds.contact"
-      role="tabpanel"
-      aria-labelledby="desktop-tab-contact mobile-tab-contact"
-      [attr.aria-hidden]="currentTab() !== 'contact'"
-      [hidden]="currentTab() !== 'contact'"
-    >
-      @if (currentTab() === 'contact') {
-        <app-contact [contact]="data.contact" />
-      }
-    </section>
+    <router-outlet />
   </main>
 
-  <app-mobile-nav
-    [tabs]="data.tabs"
-    [currentTab]="currentTab()"
-    (tabSelected)="selectTab($event)"
-  />
+  @if (!isBlogRoute()) {
+    <app-mobile-nav [tabs]="data.tabs" [currentTab]="currentTab()" />
+  }
 </div>

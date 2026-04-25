@@ -26,6 +26,7 @@ export interface PortfolioTab {
   label: string;
   mobileLabel: string;
   ariaLabel: string;
+  path: string;
   sectionId: string;
 }
 
@@ -139,28 +140,32 @@ export const PORTFOLIO_DATA = {
       id: 'home',
       label: 'Sobre',
       mobileLabel: 'Sobre',
-      ariaLabel: 'Ir para a seção Sobre',
+      ariaLabel: 'Ir para a página Sobre',
+      path: '/',
       sectionId: 'portfolio-home-panel',
     },
     {
       id: 'experience',
       label: 'Experiência',
       mobileLabel: 'Experiência',
-      ariaLabel: 'Ir para a seção Experiência',
+      ariaLabel: 'Ir para a página Experiência',
+      path: '/experience',
       sectionId: 'portfolio-experience-panel',
     },
     {
       id: 'stack',
       label: 'Stack',
       mobileLabel: 'Stack',
-      ariaLabel: 'Ir para a seção Stack',
+      ariaLabel: 'Ir para a página Stack',
+      path: '/stack',
       sectionId: 'portfolio-stack-panel',
     },
     {
       id: 'contact',
       label: 'Contato',
       mobileLabel: 'Contato',
-      ariaLabel: 'Ir para a seção Contato',
+      ariaLabel: 'Ir para a página Contato',
+      path: '/contact',
       sectionId: 'portfolio-contact-panel',
     },
   ],

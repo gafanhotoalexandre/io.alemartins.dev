@@ -1,22 +1,16 @@
 <nav
 	class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-zinc-100 z-50 pb-safe"
-	role="tablist"
-	aria-label="Seções do portfólio em dispositivos móveis"
+	aria-label="Navegação principal do portfólio em dispositivos móveis"
 >
 	<div class="flex justify-around items-center h-16 px-2">
 		@for (tab of tabs(); track tab.id) {
-			<button
-				type="button"
-				role="tab"
+			<a
+				[routerLink]="tab.path"
 				class="mobile-nav-btn flex flex-col items-center justify-center w-full h-full gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 rounded-sm"
 				[class.active-tab]="currentTab() === tab.id"
 				[id]="'mobile-tab-' + tab.id"
-				[attr.aria-controls]="tab.sectionId"
 				[attr.aria-label]="tab.ariaLabel"
-				[attr.aria-selected]="currentTab() === tab.id"
-				[tabIndex]="currentTab() === tab.id ? 0 : -1"
-				(click)="tabSelected.emit(tab.id)"
-				(keydown)="onKeydown($event, tab.id)"
+				[attr.aria-current]="currentTab() === tab.id ? 'page' : null"
 			>
 				@switch (tab.id) {
 					@case ('home') {
@@ -45,7 +39,7 @@
 					}
 				}
 				<span class="text-[10px] tracking-wide">{{ tab.mobileLabel }}</span>
-			</button>
+			</a>
 		}
 	</div>
 </nav>
